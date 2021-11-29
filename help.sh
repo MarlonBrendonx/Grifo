@@ -30,8 +30,8 @@ EOF
 #Messages
 declare -A messages=(
 
-			[encrypt]="Encrypting passwords...wait"
-      [bruteforce]="Brute Force Attack"
+	[encrypt]="Encrypting passwords...wait"
+        [bruteforce]="Brute Force Attack"
 
 )
 
@@ -40,8 +40,6 @@ declare -A messages=(
 trap ctrl_c INT
 
 ctrl_c() {
-
 	kill -15 "${PIDS[@]}"
-
 }
 

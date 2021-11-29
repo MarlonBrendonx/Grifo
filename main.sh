@@ -2,27 +2,26 @@
 
 #---------------------HEADER----------------------------------------------------------|
 
-# AUTOR			         : Marlon Brendo Ramos <marlonbrendo2013@gmail.com>
+# AUTOR		     : Marlon Brendo Ramos <marlonbrendo2013@gmail.com>
 # DATA-DE-CRIAÇÃO    : 2021-11-16
-# PROGRAMA					 :
-# LICENÇA						 :
-# DESCRIÇÃO				   :
+# PROGRAMA	     : Grifo
+# LICENÇA	     :
+# DESCRIÇÃO	     :
 #
 #------------------------------------------------------------------------------------|
 
 
 
 # ===================================================================================
-#														Bibliotecas
+#				Bibliotecas
 # ===================================================================================
 
 source help.sh || { echo "Error loading the help.sh"; exit 1; }
 source core.sh || { echo "Error loading the core.sh"; exit 1; }
 
 
-
 # ===================================================================================
-#														Variáveis
+#				Variáveis
 # ===================================================================================
 
 # Colors
@@ -40,7 +39,7 @@ temp="tmp/"
 PIDS=()
 
 # ===================================================================================
-#														Testes
+#				Testes
 # ===================================================================================
 
 (( "$UID" == 0 )) && { echo -e "${yellow}[!]${end} No root required !"; exit 1; }
@@ -52,7 +51,7 @@ echo 0 > temp
 
 
 #===================================================================================
-#														Funções
+#				Funções
 #===================================================================================
 #
 #call(){
@@ -72,10 +71,10 @@ testParameters(){
 
   	-md5 | -sha1 | -sha256 | -sha3 )
 
-					(( "$#" < 2 )) && { echo -e "${yellow}[!]${end} Missing parameters !"; help; exit 1; } ||\
-					[[ ! -e "$2" ]] && { echo -e "${yellow}[!]${end} $2 does not exist"; exit 1; }
-					[[ ! -z "$3" ]] && { echo -e "${yellow}[!]${end} file $3 is not necessary"; help; exit 1; }
-		;;
+		(( "$#" < 2 )) && { echo -e "${yellow}[!]${end} Missing parameters !"; help; exit 1; } ||\
+		[[ ! -e "$2" ]] && { echo -e "${yellow}[!]${end} $2 does not exist"; exit 1; }
+		[[ ! -z "$3" ]] && { echo -e "${yellow}[!]${end} file $3 is not necessary"; help; exit 1; }
+	 ;;
 
 	esac
 
@@ -83,7 +82,7 @@ testParameters(){
 
 
 #=============================================================================
-#														Main
+#				Main
 #=============================================================================
 
 
@@ -92,15 +91,15 @@ main(){
 
 	case "$1" in
 
-  	-bf | --bruteforce ) shift; bruteForce "$@" ;;
+  	-bf | --bruteforce ) shift; bruteForce "$@" 			;;
 		-md5 ) shift; hashPassword "-md5" "$@"  		;;
 		-sha1) shift; hashPassword "-sha1" "$@" 		;;
-		-sha256) shift; hashPassword "-sha256" "$@" ;;
-    -sha3) shift; hashPassword "-sha3" "$@" 		;;
+		-sha256) shift; hashPassword "-sha256" "$@" 		;;
+    		-sha3) shift; hashPassword "-sha3" "$@" 		;;
 
   	-h | --help ) shift; help;;
 
-		*) help ;;
+	*) help ;;
 
 	esac
 
