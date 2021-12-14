@@ -18,7 +18,7 @@
 
 source help.sh || { echo "Error loading the help.sh"; exit 1; }
 source core.sh || { echo "Error loading the core.sh"; exit 1; }
-
+source config.conf || { echo "Error loading the config.conf"; exit 1; }
 
 # ===================================================================================
 #				Variáveis
@@ -45,7 +45,6 @@ PIDS=()
 (( "$UID" == 0 )) && { echo -e "${yellow}[!]${end} No root required !"; exit 1; }
 #(( "$#" == 0 )) && { echo -e "${yellow}[!]${end} Empty parameters !"; exit 1; }
 [[ -e "$temp" ]] && rm -f $temp* || mkdir "${temp%/}";
-
 echo 0 > temp
 [[ -e xaa  ]] && rm -f x* 2>&-
 
@@ -53,18 +52,6 @@ echo 0 > temp
 #===================================================================================
 #				Funções
 #===================================================================================
-#
-#call(){
-#
-#	local param=$( cut -d: -f1 <<< "$1" )
-#
-#	case "$param" in
-#
-#  -bf | --bruteforce) bruteForce $( cut -d: -f2 <<< "$1" )  $( cut -d: -f4 <<< "$1" )  ;;
-#
-#	esac
-#}
-
 testParameters(){
 
   case "$1" in
@@ -91,8 +78,8 @@ main(){
 
 	case "$1" in
 
-  	-bf | --bruteforce ) shift; bruteForce "$@" 			;;
-		-md5 ) shift; hashPassword "-md5" "$@"  		;;
+  		-bf | --bruteforce ) shift; bruteForce "$@" 		;;
+		-md5) shift; hashPassword "-md5" "$@"  			;;
 		-sha1) shift; hashPassword "-sha1" "$@" 		;;
 		-sha256) shift; hashPassword "-sha256" "$@" 		;;
     		-sha3) shift; hashPassword "-sha3" "$@" 		;;

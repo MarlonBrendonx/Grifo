@@ -32,7 +32,7 @@ declare -A messages=(
 
 	[encrypt]="Encrypting passwords...wait"
         [bruteforce]="Brute Force Attack"
-
+	[closeprocess]="Waiting for remaining processes.."
 )
 
 #Traps
@@ -40,6 +40,9 @@ declare -A messages=(
 trap ctrl_c INT
 
 ctrl_c() {
-	kill -15 "${PIDS[@]}"
+
+	echo -e "${yellow}[!]${end} ${messages['closeprocess']}"
+
+	kill -15 "${PIDS[@]}" 2>&-
 }
 
