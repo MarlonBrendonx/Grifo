@@ -7,7 +7,7 @@ spinner(){
 
 	echo -n ' '
 
-  	while [ -d "/proc/${PID[@]}" ]
+  	while [ -d "/proc/${PIDS[@]}" ]
 	do
 
 		printf "\b${sp:i++%${#sp}:1}"
@@ -24,6 +24,7 @@ verifyDivision(){
 }
 
 findDivisor(){
+
 
 	local count=2
 
@@ -45,7 +46,7 @@ ascii_menu(){
 
 cat << EOF
 
-                                                                                              
+                                                                                 
                                                                                                     
                                                       @&&&&                                         
                          /(,.(/                  &@@@&#%@&#@&@                                      
@@ -81,8 +82,7 @@ EOF
 
 
 echo -e "${messages[$1]}: ${green}[ON]${end}\n"
-
-
+ 
 }
 
 
@@ -102,82 +102,39 @@ time_elapsed(){
 
 }
 
+sortList(){
+
+	echo -e "$1 -> ${green}checking..${end}"
+	echo -e "$2 -> ${green}checking..${end}"
+
+	if sort "$1" > "$PWD/tmp/$1" && sort "$2" > "$PWD/tmp/$2" 
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 bruteForce(){
 
-
-	local match=0
-	local it=0
-	local total=0
-	local time_elapsed=0
-  	local sizewordlist1=$( wc -l < "$1" )
- 	local sizewordlist2=$( wc -l < "$2" )
+	local sizeWordList_1=$( wc -l < "$1" )
+	local sizeWordList_2=$( wc -l < "$2" )
 
   	clear
 	ascii_menu bruteforce
 
+	SECONDS=0
 
+	sortList "$@"
+	output=$( comm -12 "$PWD/tmp/$1" "$PWD/tmp/$2" > match )
+	size=$( wc -l < match )
 
-	if findDivisor "$sizewordlist2"
-	then
+	echo -e	"\n[*] Hit Ratio: $( bc <<< "scale=6;( $size/$sizeWordList_1)*100" )%"
+	echo -e "[*] Match: $size \n"
 
-		split -l $(( "$sizewordlist2" / "$number_of_jobs" )) "$2" 2>&-
+	time_elapsed
 
-	fi
-
-	if [[ "$?" == 0   ]]
-	then
-
-		SECONDS=0
-
-		for file in x*
-		do
-
-			echo -e "$file -> ${green}checking..${end}"
-
-			while IFS= read -r line
-			do
-
-
-
-				[[ $( grep -xw -F "$line" "$file" 2>&- !=''  )  ]] && {
-
-				match=$(( match + 1  ));
-				echo $(( "$(<temp)" + 1 )) > temp;
-				sleep 0.005;
-
-				(( STOP_FIRST_MATCH  == 0 )) && {
-
-					echo -e "${blue}[*] Password found${end} : $line"; ctrl_c; exit 0; 
-
-				}
-
-
-				}
-
-
-			done < "$1" &
-
-
-			PIDS+=("$!")
-			sleep 1
-
-		done
-
-
-		wait
-
-		total=$(<temp)
-
-		(( "$total" == 0  )) && { echo -e "${red}[x]${end} Password not found !"; exit 1;} || \
-		{
-
-			echo -e  "\n[*] Match: $total"
-		   	echo   "[*] Hit Ratio: $( bc <<< "scale=4;($total/$sizewordlist2)*100"  )"
-			#echo -e "[*] Number of Attempts: $it \n"
-			time_elapsed
-
-		}
-	fi
+	exit 0
 
 }
 
