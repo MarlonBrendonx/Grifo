@@ -17,37 +17,13 @@ spinner(){
 
 }
 
-verifyDivision(){
-
-	(( "$1" % "$2"  == 0 )) && { number_of_jobs="$2"; return 0;} || return 1
-
-}
-
-findDivisor(){
-
-
-	local count=2
-
-	while (( "$count" <= "$1"  ))
-	do
-
-		(( "$1" % "$count" == 0 )) && { number_of_jobs="$count"; return  0;}
-		count=$(( $count + 1 ))
-
-	done
-
-	return 1
-
-}
-
 
 ascii_menu(){
 
 
 cat << EOF
 
-                                                                                 
-                                                                                                    
+
                                                       @&&&&                                         
                          /(,.(/                  &@@@&#%@&#@&@                                      
                       @&&#@@@&%&@@%%&@          ,&@@@@%@@@@&((                                      
@@ -107,17 +83,36 @@ sortList(){
 	echo -e "$1 -> ${green}checking..${end}"
 	echo -e "$2 -> ${green}checking..${end}"
 
-	if sort "$1" > "$PWD/tmp/$1" && sort "$2" > "$PWD/tmp/$2" 
+	if sort "$1" > "$PWD/tmp/${1##passwds/}" && sort "$2" > "$PWD/tmp/$2" 
 	then
-		return 0
+		uniq $PWD/tmp/${1##passwds/} >  $PWD/tmp/${1##passwds/}-uniq
+		cp $PWD/tmp/${1##passwds/}-uniq $PWD/tmp/${1##passwds/}
+		rm $PWD/tmp/${1##passwds/}-uniq
 	fi
 
 	return 1
 }
 
-bruteForce(){
+joinDictionaries(){
 
-	local sizeWordList_1=$( wc -l < "$1" )
+	[[ ! -d "$1" ]] && { echo "[*] It is not a directory"; exit 1; }
+
+	[[ -z "$( ls -A $1 )" ]] && { echo "[*] Directory is empty"; exit 1;}
+
+	if $( cat $1* > all-passwords)
+	then
+		
+		sort all-passwords > "$PWD/tmp/sort-all-passwords"
+		uniq "$PWD/tmp/sort-all-passwords" > all-passwords
+		rm "$PWD/tmp/sort-all-passwords" 
+
+		bruteForce "all-passwords" "$2"
+	fi
+}
+
+
+bruteForce(){
+	
 	local sizeWordList_2=$( wc -l < "$2" )
 
   	clear
@@ -126,11 +121,14 @@ bruteForce(){
 	SECONDS=0
 
 	sortList "$@"
-	output=$( comm -12 "$PWD/tmp/$1" "$PWD/tmp/$2" > match )
-	size=$( wc -l < match )
+	output=$( comm -12 "$PWD/tmp/${1##passwds/}" "$PWD/tmp/$2" > match )
 
-	echo -e	"\n[*] Hit Ratio: $( bc <<< "scale=6;( $size/$sizeWordList_1)*100" )%"
-	echo -e "[*] Match: $size \n"
+	size=$( wc -l < match )	
+	local sizeWordList_1=$( wc -l < "$PWD/tmp/${1##passwds/}" )
+
+	echo "${1##passwds/}" | tee -a saida.txt
+	echo -e	"\n[*] Hit Ratio: $( bc <<< "scale=6;( $size/$sizeWordList_1)*100" )%" | tee -a saida.txt
+	echo -e "[*] Match: $size \n\n" | tee -a saida.txt
 
 	time_elapsed
 
@@ -145,7 +143,7 @@ tools(){
 		-md5)  verifyTool "md5sum" 	  ;;
 		-sha1) verifyTool "sha1sum"       ;;
 		-sha256) verifyTool "sha256sum"   ;;
-    		-sha3) verifyTool "openssl"	  ;;
+    	-sha3) verifyTool "openssl"	  ;;
 
 	esac
 

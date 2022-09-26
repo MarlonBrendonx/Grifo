@@ -78,11 +78,12 @@ main(){
 
 	case "$1" in
 
-  		-bf | --bruteforce ) shift; bruteForce "$@" 		;;
+  		-bf | --bruteforce ) shift; bruteForce "$@" 	;;
+		-jc | --join) shift; joinDictionaries "$@" 		;;
 		-md5) shift; hashPassword "-md5" "$@"  			;;
 		-sha1) shift; hashPassword "-sha1" "$@" 		;;
-		-sha256) shift; hashPassword "-sha256" "$@" 		;;
-    		-sha3) shift; hashPassword "-sha3" "$@" 		;;
+		-sha256) shift; hashPassword "-sha256" "$@" 	;;
+    	-sha3) shift; hashPassword "-sha3" "$@" 		;;
 
   	-h | --help ) shift; help;;
 
