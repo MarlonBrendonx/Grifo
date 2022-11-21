@@ -15,10 +15,11 @@
 # ===================================================================================
 #				Bibliotecas
 # ===================================================================================
-
 source help.sh || { echo "Error loading the help.sh"; exit 1; }
 source core.sh || { echo "Error loading the core.sh"; exit 1; }
+source utils.sh || { echo "Error loading the utils.sh"; exit 1; }
 source config.conf || { echo "Error loading the config.conf"; exit 1; }
+
 
 # ===================================================================================
 #				Variáveis
@@ -37,35 +38,18 @@ number_of_jobs=0
 match=0
 temp="tmp/"
 PIDS=()
+status=${messages[ordering]}
+
 
 # ===================================================================================
 #				Testes
 # ===================================================================================
 
-(( "$UID" == 0 )) && { echo -e "${yellow}[!]${end} No root required !"; exit 1; }
-#(( "$#" == 0 )) && { echo -e "${yellow}[!]${end} Empty parameters !"; exit 1; }
-[[ -e "$temp" ]] && rm -f $temp* || mkdir "${temp%/}";
-echo 0 > temp
-[[ -e xaa  ]] && rm -f x* 2>&-
-
+testParameters  "$@"
 
 #===================================================================================
 #				Funções
 #===================================================================================
-testParameters(){
-
-  case "$1" in
-
-  	-md5 | -sha1 | -sha256 | -sha3 )
-
-		(( "$#" < 2 )) && { echo -e "${yellow}[!]${end} Missing parameters !"; help; exit 1; } ||\
-		[[ ! -e "$2" ]] && { echo -e "${yellow}[!]${end} $2 does not exist"; exit 1; }
-		[[ ! -z "$3" ]] && { echo -e "${yellow}[!]${end} file $3 is not necessary"; help; exit 1; }
-	 ;;
-
-	esac
-
-}
 
 
 #=============================================================================
@@ -75,15 +59,17 @@ testParameters(){
 
 main(){
 
+	ascii_menu bruteforce
 
 	case "$1" in
 
-  		-bf | --bruteforce ) shift; bruteForce "$@" 	;;
-		-jc | --join) shift; joinDictionaries "$@" 		;;
-		-md5) shift; hashPassword "-md5" "$@"  			;;
-		-sha1) shift; hashPassword "-sha1" "$@" 		;;
-		-sha256) shift; hashPassword "-sha256" "$@" 	;;
-    	-sha3) shift; hashPassword "-sha3" "$@" 		;;
+  		-c | --compare ) shift; bruteForce "$@" 		;;
+		-j | --join) shift; joinDictionaries "$@" 			;;
+		-e | --each) shift; compareEachDictionaries "$@"	;;
+		-md5) shift; hashPassword "-md5" "$@"  				;;
+		-sha1) shift; hashPassword "-sha1" "$@" 			;;
+		-sha256) shift; hashPassword "-sha256" "$@" 		;;
+    	-sha3) shift; hashPassword "-sha3" "$@" 			;;
 
   	-h | --help ) shift; help;;
 

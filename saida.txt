@@ -1,6 +1,6 @@
-all-passwords
+t
 
 [*] Hit Ratio: 100.000000%
-[*] Match: 8091 
+[*] Match: [0;32m5[0m 
 
 
