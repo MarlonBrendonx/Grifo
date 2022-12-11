@@ -29,8 +29,8 @@ testParameters(){
     (( "$UID" == 0 )) && { echo -e "${yellow}[!]${end} No root required !"; exit 1; }
     #(( "$#" == 0 )) && { echo -e "${yellow}[!]${end} Empty parameters !"; exit 1; }
     #[[ -e "$temp" ]] && rm -f $temp* || mkdir "${temp%/}";
-    #echo 0 > temp
     [[ -e xaa  ]] && rm -f x* 2>&-
+    [[ ! -d "$PWD/tmp/"  ]] && mkdir "$PWD/tmp/"
 
 
     case "$1" in
