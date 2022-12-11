@@ -52,28 +52,25 @@ testParameters  "$@"
 #===================================================================================
 
 
-#=============================================================================
+#==================================================================================
 #				Main
-#=============================================================================
-
-
+#==================================================================================
 main(){
 
 	ascii_menu bruteforce
 
 	case "$1" in
 
-  		-c | --compare ) shift; bruteForce "$@" 		;;
+  		-c | --compare ) shift; bruteForce "$@" 			;;
 		-j | --join) shift; joinDictionaries "$@" 			;;
 		-e | --each) shift; compareEachDictionaries "$@"	;;
 		-md5) shift; hashPassword "-md5" "$@"  				;;
 		-sha1) shift; hashPassword "-sha1" "$@" 			;;
 		-sha256) shift; hashPassword "-sha256" "$@" 		;;
     	-sha3) shift; hashPassword "-sha3" "$@" 			;;
+  		-h | --help ) shift; help							;;
 
-  	-h | --help ) shift; help;;
-
-	*) help ;;
+		*) help 											;;
 
 	esac
 

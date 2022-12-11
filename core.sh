@@ -78,7 +78,7 @@ time_elapsed(){
 
 
 sortFile(){
-
+	
 	if sort "$1" > "$PWD/tmp/${1##passwds/}"  
 	then
 		(( $DELETE_REPETEAD_LINES )) && { 
@@ -87,16 +87,16 @@ sortFile(){
 			cp $PWD/tmp/${1##passwds/}-uniq $PWD/tmp/${1##passwds/}
 			rm $PWD/tmp/${1##passwds/}-uniq
 		}
-	
+
 	fi
-	
+
 }
 
 sortList(){
 
 	if [[ ! -f "$PWD/tmp/${1##passwds/}" ]] 
 	then
-	   sortFile "${1}" &
+	   sortFile "$1" &
 	   spinner "$1 -> ${green}${status}${end}"
 	else
 		echo -e "$1 -> ${green}${messages[ordered]}${end}"
@@ -110,6 +110,8 @@ sortList(){
 		echo -e "$2 -> ${green}${messages[ordered]}${end} \n"
 	fi
 
+
+
 	return 1
 }
 
@@ -119,15 +121,16 @@ joinDictionaries(){
 
 	[[ -z "$( ls -A $1 )" ]] && { echo "[*] Directory is empty"; exit 1;}
 
-	if $( cat $1* > all-passwords)
+
+	if $( cat ${1%%/}/* > all-passwords)
 	then
-		
+
 		sort all-passwords > "$PWD/tmp/sort-all-passwords"
 		uniq "$PWD/tmp/sort-all-passwords" > all-passwords
 		rm "$PWD/tmp/sort-all-passwords" 
 
 		echo "[*] all-passwords generated"
-		# bruteForce "all-passwords" "$2"
+		
 	fi
 }
 
@@ -135,20 +138,21 @@ compareEachDictionaries(){
 
 	[[ ! -d "$1" ]] && { echo "[*] It is not a directory"; exit 1; }
 	[[ -z "$( ls -A $1 )" ]] && { echo "[*] Directory is empty"; exit 1;}
+	[[ ! -e "tmp/best-passwords/" ]] && mkdir tmp/best-passwords/
 
 	verifyExistFiles "tmp/best-passwords/" && (( $? == 0 )) || (( $? == 2 )) && {
 
 		for dic in $(ls $1*)
-		do	
-			bruteForce "$dic" "$2" "compareEachDictionaries"
+		do
+			bruteForce "passwds/${dic##passwds/}" "$2" "compareEachDictionaries"
 		done
 
 		findBestMatch
 		clear
-		
+
 		echo -e "\n"
 	}
-	
+
 	for best in "$PWD/tmp/best-passwords"/*
 	do
 		bruteForce "best-passwords/${best##*/}" "$2" 

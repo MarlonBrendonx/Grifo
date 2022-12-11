@@ -33,10 +33,10 @@ EOF
 declare -A messages=(
 
 	[encrypt]="Encrypting passwords...wait"
-        [bruteforce]="Comparing Files"
+    [bruteforce]="Comparing Files"
 	[closeprocess]="Waiting for remaining processes.."
-        [ordering]="Ordering...wait"
-        [ordered]="Ordered"
+    [ordering]="Ordering...wait"
+    [ordered]="Ordered"
 )
 
 #Traps
