@@ -10,7 +10,7 @@ This is a simple script that was created to perform comparisons between password
 
 * Functionalities
 
-![](/home/user/TCC2/CLONE-GRIFO/Grifo/figs/help.png)
+![](./figs/help.png)
 
 
 
