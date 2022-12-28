@@ -1,0 +1,6 @@
+passwords_1000_0.1.txt
+
+[*] Hit Ratio: 0%
+[*] Match: [0;32m0[0m 
+
+
