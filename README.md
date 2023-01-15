@@ -18,7 +18,7 @@ This is a simple script that was created to perform comparisons between password
 
 Hit Ratio
 
-HR = |U^l_hits| |U_all|
+HR = |U^l_hits| / |U_all|
 
 * Numerator |𝑈 ^𝑙 ℎ𝑖𝑡𝑠| represents the number of correct passwords generated compared to dictionary
 
